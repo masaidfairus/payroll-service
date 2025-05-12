@@ -1,22 +1,26 @@
 <?php
 
-namespace App\Filament\Resources\ScheduleResource\Pages;
+namespace App\Filament\Resources\AttendanceResource\Pages;
 
-use App\Filament\Resources\ScheduleResource;
+use App\Filament\Resources\AttendanceResource;
 use Filament\Actions;
+use Filament\Actions\Action as Action;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Arr;
-use Filament\Actions\CreateAction;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasRoles;
 
-class ListSchedules extends ListRecords
+
+class ListAttendances extends ListRecords
 {
-    protected static string $resource = ScheduleResource::class;
+    protected static string $resource = AttendanceResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('presensi')
+                ->url('/presensi')
+                ->color('success'),
             Actions\CreateAction::make(),
         ];
     }
@@ -31,5 +35,4 @@ class ListSchedules extends ListRecords
 
         return $query->where('user_id', Auth::id());
     }
-
 }
