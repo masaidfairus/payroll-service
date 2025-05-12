@@ -8,6 +8,7 @@ use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Filament\Actions\CreateAction;
 
 class ListSchedules extends ListRecords
 {
@@ -19,7 +20,7 @@ class ListSchedules extends ListRecords
             Action::make('presensi')
             ->url('')
             ->color('warning'),
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
@@ -27,7 +28,7 @@ class ListSchedules extends ListRecords
     {
         $query = parent::getTableQuery();
 
-        if (Auth::user()?->HasRole('super_admin')) {
+        if (Auth::user()?->hasRole('super_admin')) {
             return $query;
         }
 
