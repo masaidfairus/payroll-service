@@ -21,80 +21,94 @@ class OfficeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
     public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                OSMMap::make('location')
-                    ->label('Location')
-                    ->showMarker()
-                    ->draggable()
-                    ->extraControl([
-                        'zoomDelta' => 1,
-                        'zoomSnap' => 0.25,
-                        'wheelPxPerZoomLevel' => 200
-                    ])
-                    ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set, $record) {
-                        if ($record) {
-                            $latitude = $record->latitude;
-                            $longitude = $record->longitude;
-                            if ($latitude && $longitude) {
-                                $set('location', ['lat' => $latitude, 'lng' => $longitude]);
-                            }
-                        }
-                    })
-                    ->afterStateUpdated(function ($state, Forms\Get $get, Forms\Set $set) {
-                        $set('latitude', $state['lat']);
-                        $set('longitude', $state['lng']);
-                    })
-                    ->tilesUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
-                Forms\Components\TextInput::make('latitude')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('longitude')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('radius')
-                    ->numeric(),
-            ]);
+    { {
+            return $form
+                ->schema([
+                        Forms\Components\Group::make()
+                            ->schema([
+                                    Forms\Components\Section::make()
+                                        ->schema([
+                                                Forms\Components\TextInput::make('name')
+                                                    ->required(),
+                                                OSMMap::make('location')
+                                                    ->label('Location')
+                                                    ->showMarker()
+                                                    ->draggable()
+                                                    ->extraControl([
+                                                            'zoomDelta' => 1,
+                                                            'zoomSnap' => 0.25,
+                                                            'wheelPxPerZoomLevel' => 200
+                                                        ])
+                                                    ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set, $record) {
+                                                        if ($record) {
+                                                            $latitude = $record->latitude;
+                                                            $longitude = $record->longitude;
+                                                            if ($latitude && $longitude) {
+                                                                $set('location', ['lat' => $latitude, 'lng' => $longitude]);
+                                                            }
+                                                        }
+                                                    })
+                                                    ->afterStateUpdated(function ($state, Forms\Get $get, Forms\Set $set) {
+                                                        $set('latitude', $state['lat']);
+                                                        $set('longitude', $state['lng']);
+                                                    })
+                                                    ->tilesUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+                                                Forms\Components\Group::make()
+                                                    ->schema([
+                                                            Forms\Components\TextInput::make('latitude')
+                                                                ->numeric(),
+                                                            Forms\Components\TextInput::make('longitude')
+                                                                ->numeric(),
+                                                        ])->columns(2)
+                                            ])
+                                ]),
+                        Forms\Components\Group::make()
+                            ->schema([
+                                    Forms\Components\Section::make()
+                                        ->schema([
+                                                Forms\Components\TextInput::make('radius')
+                                                    ->numeric(),
+                                            ])
+                                ])
+                    ]);
+        }
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('latitude')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('longitude')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('radius')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
+                    Tables\Columns\TextColumn::make('name')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('latitude')
+                        ->numeric()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('longitude')
+                        ->numeric()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('radius')
+                        ->numeric()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('created_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                    Tables\Columns\TextColumn::make('updated_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                ])
             ->filters([
-                //
-            ])
+                    //
+                ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
+                    Tables\Actions\EditAction::make(),
+                ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                    Tables\Actions\BulkActionGroup::make([
+                        Tables\Actions\DeleteBulkAction::make(),
+                    ]),
+                ]);
     }
 
     public static function getRelations(): array
