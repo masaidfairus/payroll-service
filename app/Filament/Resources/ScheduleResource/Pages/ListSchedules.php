@@ -3,10 +3,11 @@
 namespace App\Filament\Resources\ScheduleResource\Pages;
 
 use App\Filament\Resources\ScheduleResource;
-use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 
 class ListSchedules extends ListRecords
 {
@@ -15,6 +16,9 @@ class ListSchedules extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('presensi')
+            ->url('')
+            ->color('warning'),
             Actions\CreateAction::make(),
         ];
     }
@@ -29,4 +33,6 @@ class ListSchedules extends ListRecords
 
         return $query->where('user_id', Auth::id());
     }
+
+
 }
