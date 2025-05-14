@@ -75,7 +75,7 @@ class LeaveResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'warninf',
+                        'pending' => 'warning',
                         'rejected' => 'danger',
                         'approved' => 'success',
                     }),
