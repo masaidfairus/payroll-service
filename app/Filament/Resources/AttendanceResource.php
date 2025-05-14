@@ -17,7 +17,7 @@ class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
 
     public static function form(Form $form): Form
     {
@@ -64,6 +64,19 @@ class AttendanceResource extends Resource
                     ->label('Jam Masuk'),
                 Tables\Columns\TextColumn::make('end_time')
                     ->label('Jam Keluar'),
+                Tables\Columns\TextColumn::make('is_late')
+                    ->label('Status')
+                    ->badge()
+                    ->getStateUsing(function (Attendance $record) {
+                        return $record->isLate() ? 'Terlambat' : 'Tepat Waktu';
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'Tepat Waktu' => 'success',
+                        'Terlambat' => 'danger',
+                    })
+                    ->description(function (Attendance $record) {
+                        return 'Durasi: ' . $record->workDuration();
+                    }),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

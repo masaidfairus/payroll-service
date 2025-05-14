@@ -11,9 +11,9 @@
                             {{ $schedule->shift->end_time }})
                         </p>
                         @if ($schedule->is_wfa)
-                            <p class="text-green-500"><strong>Status: </strong>WFA</p>
+                            <p class="text-green-500"><strong>Status: </strong> WFA</p>
                         @else
-                            <p><strong>Kantor: </strong>WFO</p>
+                            <p><strong>Status: </strong> WFO</p>
                         @endif
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                             class="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-400 transition">Tag
                             Location</button>
                         @if ($insideRadius)
-                            <button type="button"
+                            <button type="submit"
                                 class="px-4 py-2 bg-green-500 text-white rounded cursor-pointer hover:bg-green-400 transition">Submit
                                 Presensi</button>
                         @endif
@@ -55,7 +55,7 @@
     const office = [{{ $schedule->office->latitude }}, {{ $schedule->office->longitude }}];
     const radius = {{ $schedule->office->radius }};
     let component;
-    const isWfa = @json($schedule->isWfa);
+    const isWfa = @json($schedule->is_wfa);
 
     document.addEventListener('livewire:initialized', function () {
         component = @this;
@@ -79,6 +79,9 @@
                 lat = position.coords.latitude;
                 lng = position.coords.longitude;
 
+                console.log('Latitude: ' + lat);
+                console.log('Longitude: ' + lng);
+
                 if (marker) {
                     map.removeLayer(marker);
                 }
@@ -95,9 +98,9 @@
                         component.set('insideRadius', true);
                         component.set('latitude', lat);
                         component.set('longitude', lng);
-                        alert('Anda WFA!');
+                        alert('Anda sedang WFA!')
                     } else {
-                        alert('Anda tidak berada di dalam radius kantor!')
+                        alert('Anda berada di luar radius!')
                     }
                 }
             })
